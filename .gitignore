@@ -3,7 +3,7 @@
 /.config.cmd
 /.config.old
 /..config.tmp
-/.config
+/dl
 *.depend
 *.o
 /*.patch
