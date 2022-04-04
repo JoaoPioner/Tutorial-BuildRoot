@@ -13,9 +13,7 @@
 
 char http_ok[] = "HTTP/1.0 200 OK\r\nContent-type: text/html\r\nServer: Test\r\n\r\n";
 char http_error[] = "HTTP/1.0 400 Bad Request\r\nContent-type: text/html\r\nServer: Test\r\n\r\n";
-char page[1000000];
-char page1[] = "<!DOCTYPE html>\n<html>\n<head>\n</head>\n<body>\n<p>";
-char page2[] = "</p>\n</body>\n</html>\n<script>\n    var dt = new Date();\n    document.getElementById('date-time').innerHTML=dt;\n</script>\n\n";
+char page[]="<!DOCTYPE html>\n<html>\n<head>\n</head>\n<body>\n<p>Current Date and Time is <span id='date-time'></span>.<br><br></p>\n</body>\n</html>\n<script>\n    var dt = new Date();\n    document.getElementById('date-time').innerHTML=dt;\n</script>\n\n";
 
 
 void die(char *s)
@@ -49,25 +47,7 @@ int main(void)
 	/* allow 10 requests to queue up */ 
 	if (listen(s, 10) == -1)
 		die("listen");
-    
 
-	FILE *cpuinfo = fopen("/proc/cpuinfo", "rb");
-   	char *arg = 0;
-   	size_t size = 0;
-	while(getdelim(&arg, &size, 0, cpuinfo) != -1) {
-      	puts(arg);
-   	}
-
-	char* strC[1000000];
-   	fclose(cpuinfo);
-	strcat(strC, page1);
-	strcat(strC, arg);
-	free(arg);
-	strcat(strC, page2);
-	strcpy(page, strC);
-	/* close the connection */
-	close(conn);
-	/* keep listening for data */
 	while (1) {
 		memset(buf, 0, sizeof(buf));
 		printf("Waiting a connection...");
