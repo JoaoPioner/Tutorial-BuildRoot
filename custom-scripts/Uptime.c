@@ -52,18 +52,27 @@ int main(void)
 		die("listen");
     
 
-	FILE *cpuinfo = fopen("/proc/cpuinfo", "rb");
-   	char *arg = 0;
-   	size_t size = 0;
-	while(getdelim(&arg, &size, 0, cpuinfo) != -1) {
-      	puts(arg);
-   	}
+	FILE *fp;
+    char path[1035];
+
+    /* Open the command for reading. */
+    fp = popen("uptime", "r");
+    if (fp == NULL) {
+        printf("Failed to run command\n" );
+        exit(1);
+    }
+
+    /* Read the output a line at a time - output it. */
+    while (fgets(path, sizeof(path), fp) != NULL) {
+        printf("%s", path);
+    }
+
+    /* close */
+    pclose(fp);
 
 	char* strC[1000000];
-   	fclose(cpuinfo);
 	strcat(strC, page1);
-	strcat(strC, arg);
-	free(arg);
+	strcat(strC, path);
 	strcat(strC, page2);
 	strcpy(page, strC);
 	/* close the connection */

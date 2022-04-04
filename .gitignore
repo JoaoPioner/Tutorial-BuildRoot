@@ -1,9 +1,9 @@
 /output
+/dl
 /.auto.deps
 /.config.cmd
 /.config.old
 /..config.tmp
-/dl
 *.depend
 *.o
 /*.patch

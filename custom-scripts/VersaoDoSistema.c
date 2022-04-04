@@ -7,6 +7,8 @@
 #include <stdlib.h>
 #include <arpa/inet.h>
 #include <sys/socket.h>
+#include<sys/utsname.h>
+#include<unistd.h>
 
  
 #define BUFLEN	1024	//Max length of buffer
@@ -51,23 +53,20 @@ int main(void)
 	if (listen(s, 10) == -1)
 		die("listen");
     
-
-	FILE *cpuinfo = fopen("/proc/cpuinfo", "rb");
-   	char *arg = 0;
-   	size_t size = 0;
-	while(getdelim(&arg, &size, 0, cpuinfo) != -1) {
-      	puts(arg);
-   	}
-
-	char* strC[1000000];
-   	fclose(cpuinfo);
-	strcat(strC, page1);
-	strcat(strC, arg);
-	free(arg);
+    struct utsname uts;
+    uname(&uts);
+    printf("System is %s on %s hardware\n",uts.sysname, uts.machine);
+    printf("OS Release is %s\n",uts.release);
+    printf("OS Version is\n",uts.version);
+    
+    char* strC[1000000];
+    strcat(strC, page1);
+	strcat(strC, uts.sysname);
+    strcat(strC, uts.machine);
+    strcat(strC, uts.release);
+    strcat(strC, uts.version);
 	strcat(strC, page2);
 	strcpy(page, strC);
-	/* close the connection */
-	close(conn);
 	/* keep listening for data */
 	while (1) {
 		memset(buf, 0, sizeof(buf));
